@@ -62,4 +62,16 @@ if $0 == __FILE__
   puts "\n"*5
   
   puts "expected <#{expected.inspect}> but got <#{actual.inspect}>"
+  
+  
+  
+  a1 = [0,1,2,3,4,5,6,7]
+  a2 = [-1,0,1,2,3,9,10,5,6]
+  
+  puts "array test"
+  ObjectDiff.array_strategy = :lcs
+  pp diff(a1, a2)
+  
+  ObjectDiff.array_strategy = :naive
+  pp diff(a1, a2)
 end

@@ -1,9 +1,5 @@
 require 'ostruct'
 
-Dir[File.dirname(__FILE__) + "/diff_strategies/*.rb"].each do |strategy|
-  require strategy
-end
-
 class ObjectDiff
   DEFAULT_SIZE_LIMIT = 20
 
@@ -22,7 +18,33 @@ class ObjectDiff
   def differences
     @context.differences
   end
+  
+  def self.external_strategies
+    @@external_strategies ||= {}
+  end
 end
+
+Dir[File.dirname(__FILE__) + "/diff_strategies/*.rb"].each do |strategy|
+  require strategy
+end
+
+class Object
+  def diffs_with? other
+    self.class == other.class
+  end
+  
+  def object_diff other, diff
+    if ObjectDiff.external_strategies.has_key?(self.class.name)
+      extend ObjectDiff.external_strategies[self.class.name]
+      return self.object_diff(other, diff)
+    end
+    
+    if self != other
+      diff.report_unequal "#{diff.current_name}", self, other
+    end
+  end
+end
+
 
 class DiffContext
   def initialize diff_name, size_limit
@@ -63,11 +85,11 @@ class DiffContext
   end
 
   def report_extra name, unexpected
-    report "#{name} should not have been present, but was #{show unexpected})"
+    report "#{name} was extra, had value #{show unexpected})"
   end
 
   def report_missing name, expected
-    report "#{name} was not present and should have been #{show expected}"
+    report "#{name} was missing, expected #{show expected}"
   end
   
   def report_circular sub_path, left, right
