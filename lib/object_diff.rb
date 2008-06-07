@@ -3,8 +3,13 @@ require 'ostruct'
 class ObjectDiff
   DEFAULT_SIZE_LIMIT = 20
 
-  def initialize  diff_name="actual", size_limit=DEFAULT_SIZE_LIMIT
-    @context = DiffContext.new diff_name, size_limit
+  def initialize args={}
+    args = {
+      :other_name => "actual",
+      :max_diff_size => DEFAULT_SIZE_LIMIT
+    }.merge(args)
+    
+    @context = DiffContext.new args[:other_name], args[:max_diff_size]
   end
   
   def limit_reached?
@@ -60,10 +65,6 @@ class DiffContext
   attr_accessor :size_limit
   attr_reader :differences
   
-  def limit_reached?
-    @limit_reached
-  end
-  
   def show object
     "<#{object.inspect}>"
   end
@@ -77,7 +78,9 @@ class DiffContext
   end
     
   def report difference
-    @differences << difference
+    unless limit_reached?
+      @differences << difference
+    end
   end
     
   def report_unequal name, expected, actual
@@ -96,17 +99,12 @@ class DiffContext
     report "#{current_name} was wrong. (#{@diff_name}#{sub_path}) expected, but was #{show right}"
   end
   
-  def should_continue?
-    if @differences.size >= @size_limit
-      @limit_reached = true
-      false
-    else
-      true
-    end
+  def limit_reached?
+    @differences.size >= @size_limit
   end
   
   def continue path_component, left, right
-    return unless should_continue?
+    return if limit_reached?
     
     @path.push path_component
     @left_stack.push left.object_id
