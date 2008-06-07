@@ -56,22 +56,26 @@ if $0 == __FILE__
   actual[0][:circular] = {:reference => nil}
   
   require 'pp'
+  puts "*"*100
+  puts "Example standard explanation"
+  puts "expected <#{expected.inspect}>\n but got <#{actual.inspect}>"
+  
+  puts "*"*100
+  puts "Example explanation based on ObjectDiff"
   puts "Expected value differed from actual"
   pp diff(expected, actual)
-  
-  puts "\n"*5
-  
-  puts "expected <#{expected.inspect}> but got <#{actual.inspect}>"
-  
-  
+    
   
   a1 = [0,1,2,3,4,5,6,7]
   a2 = [-1,0,1,2,3,9,10,5,6]
   
-  puts "array test"
-  ObjectDiff.array_strategy = :lcs
+  puts "*"*100
+  puts "Example using naive array diff"
+  ObjectDiff.array_strategy = :naive
   pp diff(a1, a2)
   
-  ObjectDiff.array_strategy = :naive
+  puts "*"*100
+  puts "Example using smart, LCS-based array diff"
+  ObjectDiff.array_strategy = :lcs
   pp diff(a1, a2)
 end
