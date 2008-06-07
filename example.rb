@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/lib/object_diff"
 
 def diff o1, o2
-  @diff = ObjectDiff.new "actual", 20
+  @diff = ObjectDiff.new
   @diff.execute o1, o2
   differences = @diff.differences
   differences << "..." if @diff.limit_reached?
