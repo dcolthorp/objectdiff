@@ -56,7 +56,7 @@ describe DiffContext, "#differences on arrays using the naive algorithm" do
         @diff.differences[0].should include("extra")
       end
     end
-    
+       
     describe "when there are extra elements in the array" do
       before do
         @diff.execute [:a,:b,:c], [:x,:a,:y,:b,:c, :z]
@@ -79,6 +79,30 @@ describe DiffContext, "#differences on arrays using the naive algorithm" do
         @diff.differences[2].should match(/:z\b/)
         @diff.differences[2].should match(/\b5\b/)
         @diff.differences[2].should include("extra")
+      end
+    end
+    
+    describe "when there are elements missing from the array" do
+      before do
+        @diff.execute [:x,:a,:y,:b,:c, :z], [:a,:b,:c]
+        @diff.differences.should_not be_empty
+      end
+      
+      it "should tell about extra elements at the start of the array" do
+        @diff.differences[0].should match(/:x\b/)
+        @diff.differences[0].should include("missing element at beginning")
+      end
+
+      it "should tell about extra elements in the middle of the array" do
+        @diff.differences[1].should match(/:y\b/)
+        @diff.differences[1].should include("at 1")
+        @diff.differences[1].should include("from 2")
+        @diff.differences[1].should include("missing")
+      end
+
+      it "should tell about extra elements at the end of the array" do
+        @diff.differences[2].should match(/:z\b/)
+        @diff.differences[2].should include("missing element at end")
       end
     end
   end

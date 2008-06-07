@@ -66,8 +66,8 @@ if $0 == __FILE__
   pp diff(expected, actual)
     
   
-  a1 = [0,1,2,3,4,5,6,7]
-  a2 = [-1,0,1,2,3,9,10,5,6]
+  a1 = (0..11).to_a
+  a2 = [-1,0,1,4,5,6,:a,:b,11,12]
   
   puts "*"*100
   puts "Example using naive array diff"
