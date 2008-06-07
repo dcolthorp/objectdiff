@@ -24,7 +24,7 @@ class ObjectDiff
   end
 end
 
-Dir[File.dirname(__FILE__) + "/diff_strategies/*.rb"].each do |strategy|
+Dir[File.dirname(__FILE__) + "/diff_strategies/**/*.rb"].each do |strategy|
   require strategy
 end
 
