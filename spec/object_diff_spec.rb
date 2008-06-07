@@ -25,41 +25,46 @@ describe DiffContext, "#differences" do
     end
   end
   
-  # describe "when one object contains a circular reference" do
-  #     describe "and the two objects are identical" do
-  #       it "should not have differences" do
-  #         circular1 = []
-  #         circular2 = []
-  #         circular1.push circular1
-  #         circular2.push circular1
-  # 
-  #         @diff.execute circular1, circular2
-  #         @diff.differences.should be_empty
-  #       end
-  #     end
-  #     
-  #     describe "and the two objects are not identical but have the same circular structure" do
-  #       it "should not have differences" do
-  #         circular1 = []
-  #         circular2 = []
-  #         circular1.push circular1
-  #         circular2.push circular2
-  # 
-  #         @diff.execute circular1, circular2
-  #         @diff.differences.should be_empty
-  #       end
-  #     end
-  #     
-  #     describe "and the two objects are not equal" do
-  #       it "should not have differences" do
-  #         circular = [[]]
-  #         circular[0].push circular
-  # 
-  #         @diff.execute circular, [[:foo]]
-  #         @diff.differences.size.should == 1
-  #       end
-  #     end
-  # end
+  describe "when one object contains a circular reference" do
+    before do
+      # disable all strategies that cannot handle circular references
+      ObjectDiff.array_strategy = :naive
+    end
+    
+    describe "and the two objects are identical" do
+      it "should not have differences" do
+        circular1 = []
+        circular2 = []
+        circular1.push circular1
+        circular2.push circular1
+
+        @diff.execute circular1, circular2
+        @diff.differences.should be_empty
+      end
+    end
+    
+    describe "and the two objects are not identical but have the same circular structure" do
+      it "should not have differences" do
+        circular1 = []
+        circular2 = []
+        circular1.push circular1
+        circular2.push circular2
+
+        @diff.execute circular1, circular2
+        @diff.differences.should be_empty
+      end
+    end
+    
+    describe "and the two objects are not equal" do
+      it "should not have differences" do
+        circular = [[]]
+        circular[0].push circular
+
+        @diff.execute circular, [[:foo]]
+        @diff.differences.size.should == 1
+      end
+    end
+  end
   
   describe "on two deeply destructurable objects which are not equal" do
     it "should describe the differences between those two objects" do
