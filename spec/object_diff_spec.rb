@@ -56,12 +56,16 @@ describe DiffContext, "#differences" do
     end
     
     describe "and the two objects are not equal" do
-      it "should not have differences" do
-        circular = [[]]
-        circular[0].push circular
+      it "should say expected it (path same object higher up in the hierarchy)" do
+        # circular[0][0][0] references circular[0]
+        circular = [[[]]]
+        circular[0][0].push circular[0]
 
-        @diff.execute circular, [[:foo]]
+        @diff.execute circular, [[[:foo]]]
         @diff.differences.size.should == 1
+        @diff.differences[0].should include("actual[0][0][0]")
+        @diff.differences[0].should include(":foo")
+        @diff.differences[0].should include("(actual[0])")
       end
     end
   end
