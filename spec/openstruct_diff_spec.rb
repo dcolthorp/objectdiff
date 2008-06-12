@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-describe DiffContext, "#differences on hashes" do
+describe ObjectDiff, "#differences on hashes" do
   before do
     @diff = ObjectDiff.new
   end

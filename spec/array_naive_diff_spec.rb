@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-describe DiffContext, "#differences on arrays using the naive algorithm" do
+describe ObjectDiff, "#differences on arrays using the naive algorithm" do
   before do
     @diff = ObjectDiff.new
     ObjectDiff.array_strategy = :naive
