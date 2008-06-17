@@ -1,8 +1,6 @@
 module ObjectDiff::Strategies
   module Enumerable
     module LCS
-      extend ObjectDiff::SwitchableDiff
-      
       def object_diff other, diff
         a1 = ObjectDiff::Strategies::Enumerable.to_array self
         a2 = ObjectDiff::Strategies::Enumerable.to_array other
