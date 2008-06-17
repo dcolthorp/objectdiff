@@ -28,6 +28,18 @@ class ObjectDiff
     @@external_strategies ||= {}
   end
   
+  # extend a diff strategy module with this module to make sure
+  # that it can be switched between alternatives multiple times
+  module SwitchableDiff
+    def append_features o
+      super
+      my_diff = instance_method(:object_diff)
+      o.class_eval do
+        define_method :object_diff, my_diff
+      end
+    end
+  end
+  
   class DiffContext
     def initialize diff_name, size_limit
       @differences = []
@@ -110,7 +122,7 @@ class ObjectDiff
   end
 end
 
-['core_ext', 'strategies'].each do |d|
+['strategies', 'core_ext'].each do |d|
   Dir[File.dirname(__FILE__) + "/#{d}/**/*.rb"].each do |strategy|
     require strategy
   end
