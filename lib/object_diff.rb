@@ -110,8 +110,10 @@ class ObjectDiff
   end
 end
 
-Dir[File.dirname(__FILE__) + "/diff_strategies/**/*.rb"].each do |strategy|
-  require strategy
+['core_ext', 'strategies'].each do |d|
+  Dir[File.dirname(__FILE__) + "/#{d}/**/*.rb"].each do |strategy|
+    require strategy
+  end
 end
 
 class Object

@@ -10,12 +10,12 @@ class ObjectDiff
   end
   
   def self.diff_arrays a1, a2, diff
-    (@array_strategy || Array::LCS).diff a1, a2, diff
+    (@array_strategy || Array::LCS).object_diff a1, a2, diff
   end
   
   module Array
     module NAIVE
-      def self.diff a1, a2, diff
+      def self.object_diff a1, a2, diff
         unless a1.length == a2.length
           diff.report_unequal "#{diff.current_name}.length", a1.length, a2.length
         end
@@ -37,7 +37,7 @@ class ObjectDiff
     end
     
     module LCS
-      def self.diff a1, a2, diff
+      def self.object_diff a1, a2, diff
         require 'rubygems'
         gem 'diff-lcs'
         require 'diff/lcs'
