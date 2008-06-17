@@ -122,4 +122,18 @@ describe ObjectDiff, "#differences for an enumerable using an lcs strategy" do
       end
     end
   end
+  
+  describe "when the enumerable has a circular reference" do
+    it "should fall back to the naive strategy" do
+      a1 = []
+      a1 << a1
+      target1 = LCSEnumerablyDiffable.new a1
+      
+      a2 = [[]]
+      a2[0] << a2
+      target2 = LCSEnumerablyDiffable.new a2
+      
+      @diff.execute target1, target2       
+    end
+  end
 end

@@ -107,6 +107,22 @@ class ObjectDiff
       @left_stack.pop
       @right_stack.pop
     end
+    
+    def transaction
+      old_differences = @differences.dup
+      begin
+        yield
+      rescue
+        @differences = old_differences
+        raise
+      end
+    end
+    
+    def continue_with_strategy strategy, a, b, diff
+      new_strategy = ObjectDiff::Strategies::Enumerable::Naive
+      a.extend new_strategy
+      new_strategy.instance_method(:object_diff).bind(a).call(b, diff)
+    end
   end
 end
 

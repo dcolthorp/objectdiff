@@ -26,11 +26,6 @@ describe ObjectDiff, "#differences" do
   end
   
   describe "when one object contains a circular reference" do
-    before do
-      # disable all strategies that cannot handle circular references
-      ObjectDiff.array_strategy = :naive
-    end
-    
     describe "and the two objects are identical" do
       it "should not have differences" do
         circular1 = []
